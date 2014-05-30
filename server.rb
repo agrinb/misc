@@ -117,13 +117,13 @@ def find_movie_actors(id)
 end
 
 #==============================================================================
-def submit_new_movie(movie_title, release_year, rating, genre_id)
-  sql = "INSERT INTO movies (title, year, rating, genre_id, created_at) " +
-    "VALUES ($1, $2, $3, $4, NOW())"
+def submit_new_movie(movie_title, release_year, rating, genre_id, studio_id)
+  sql = "INSERT INTO movies (title, year, rating, genre_id, studio_id, created_at) " +
+    "VALUES ($1, $2, $3, $4, $5, NOW())"
 
   connection = PG.connect(dbname: 'movies')
-  connection.exec_params(sql, [movie_title, release_year, rating, genre_id])
-  binding.pry
+  connection.exec_params(sql, [movie_title, release_year, rating, genre_id, studio_id])
+
   connection.close
 end
 
@@ -175,10 +175,9 @@ get '/new' do
   erb :'movies/new.html'
 end
 
-post '/new' do
-  binding.pry
-  submit_new_movie(params[:movie_title], params[:release_year], params[:rating],  params[:genre_id])
-  redirect '/movies/index.html'
+post '/movies/new' do
+  submit_new_movie(params[:movie_title], params[:release_year], params[:rating], params[:genre_id], params[:studio_id])
+  redirect '/movies'
 end
 
 

@@ -1,12 +1,20 @@
-<form action="/new" method="post">
-<label for="movie_title">Movie Title:</label>
-<input type="text" id="movie_title" name="movie_title" /><br>
-<label for="release_year">Release Year:</label>
-<input type="text" id="release_year" name="release_year" /><br>
-<label for="rating">Rating:</label>
-<input type="text" id="rating" name="rating" /><br>
-<label for="rating">Genre ID</label>
-<input type="text" id="genre_id" name="genre_id" /><br>
+<form action="/movies/new" method="post">
 
-<input type="submit" value="Submit" />
+  <label for="movie_title">Movie Title:</label>
+  <input type="text" id="movie_title" name="movie_title" /><br>
+
+  <label for="release_year">Release Year:</label>
+  <input type="text" id="release_year" name="release_year" /><br>
+
+  <label for="rating">Rating:</label>
+  <input type="text" id="rating" name="rating" /><br>
+
+  <label for="genre_id">Genre ID</label>
+  <input type="text" id="genre_id" name="genre_id" /><br>
+
+  <label for="studio_id">Studio ID</label>
+  <input type="text" id="studio_id" name="studio_id" /><br>
+
+  <input type="submit" value="Submit" />
+
 </form>
