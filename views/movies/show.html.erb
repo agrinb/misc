@@ -4,13 +4,14 @@
   <li> <%= "Studio: #{@movie_details[0]["studio"]}" %> </li>
 </ul>
 
-<%@movie_details.each do |detail| %>
+<%@movie_actors.each do |actor| %>
 <ul>
 <li>
-<a href="/actors/<%="#{detail["id"]}"%>"><%= "#{detail["actor"]}" %></a>
+<a href="/actors/<%="#{actor["id"]}"%>"><%= "#{actor["name"]}" %></a>
 <br>
-<%= "As \"#{detail["character"]}\"" %>
+<%= "As \"#{actor["character"]}\"" %>
 
 </li>
 </ul>
 <% end %>
+
