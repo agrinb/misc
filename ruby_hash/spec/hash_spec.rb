@@ -35,13 +35,15 @@ RSpec.describe hash do
     it "returns array of keys" do
       hash_me = Hash_me.new
       h = hash_me.add(2,3)
-      expect(h.keys).to eq([2])
+      h = h.add(4,5)
+      expect(h.keys).to match_array([2,4])
     end
 
     it "returns array of values" do
       hash_me = Hash_me.new
-
-      expect(hash_me.values).to eq([3])
+      h = hash_me.add(2,3)
+      h = h.add(4,5)
+      expect(h.values).to match_array([3,5])
     end
 
 

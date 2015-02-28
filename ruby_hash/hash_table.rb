@@ -1,5 +1,4 @@
 require 'pry'
-require_relative 'hash_entry.rb'
 
 class Hash_me
   attr_accessor :bin_count, :bins
@@ -14,6 +13,7 @@ class Hash_me
     index = bin_for(key)
     self.bins[index] ||= []
     self.bins[index] << [key, value]
+    self
   end
 
   def evl(key)
@@ -25,22 +25,37 @@ class Hash_me
   end
 
   def merge(entry)
+    binding.pry
     entry.bins.each_with_index do |sub,i|
       if self.bins[i] == nil
         self.bins[i] = sub
       else
-        add(sub[0],sub[1])
+        self.add(sub[0],sub[1])
       end
     end
     self
   end
 
   def keys
-    self.bins.select! do |x|
-      next if x == nil
-      x[0]
-     end
+    keys = []
+    self.bins.each do |x|
+      unless x == nil
+        keys << x[0][0]  
+      end
+    end
+    keys
   end
+
+  def values
+    values = []
+    self.bins.each do |x|
+      unless x == nil
+        values << x[0][1]  
+      end
+    end
+    values
+  end
+
 
 
 
