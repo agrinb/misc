@@ -27,15 +27,31 @@ class HashMeTest(unittest.TestCase):
         ha.add(8,9)
         self.assertEquals(ha.get(8), 9)
 
+    def test_keys(self):
+        ha = Hash_me()
+        ha.add(8,9)
+        ha2 = Hash_me()
+        ha2.add(55,66)
+        ha.merge(ha2)
+        self.assertItemsEqual(ha.keys(),[55, 8])
+
+    def test_values(self):
+        ha = Hash_me()
+        ha.add(8,9)
+        ha2 = Hash_me()
+        ha2.add(55,66)
+        ha.merge(ha2)
+        self.assertItemsEqual(ha.values(),[66, 9])
+
+
     def test_merge(self):
         ha = Hash_me()
         ha.add(8,9)
         ha2 = Hash_me()
         ha2.add(55,66)
         ha.merge(ha2)
-
-        self.assertEquals(ha.keys(), [55, 8])
-        self.assertEquals(ha.values(), [66, 9])
+        self.assertItemsEqual(ha.keys(),[55, 8])
+        self.assertItemsEqual(ha.values(),[66, 9])
 
 
 

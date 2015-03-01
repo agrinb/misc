@@ -2,10 +2,10 @@ import pdb
 
 class Hash_me(object):
     def __init__(self):
-        self.current = 0 
-        self.high = 499
-        self.bin_count = 500
-        self.bins = ['empty'] * 500
+        # self.current = 0 
+        # self.high = 499
+        self.bin_count = 10
+        self.bins = ['empty'] * 10
 
     def __iter__(self):
         return iter(self.bins)
@@ -33,15 +33,78 @@ class Hash_me(object):
         index = self.bin_for(key)
         return self.bins[index][1]
 
-    def add(self, key, value):
-        index = self.bin_for(key)
-        try:
-            self.bins[index] = [key, value]
-        except IndexError:
-            self.bins.insert(index, [key, value])
-        return 
+# def wrapper(func, *args):
+# func(*args)
+
+# def func1(x):
+# print(x)
+
+# def func2(x, y, z):
+# print x+y+z
+
+# wrapper(func1, 1)
+# wrapper(func2, 1, 2, 3)
+    
+    
+
+    def add_mult(self, args):
+        arr = args
+        for idx, val in enumerate(arr):
+            if idx < len(arr) - 1 and (idx == 0 or idx % 2 == 0):
+                pdb.set_trace()
+                self.merge(((arr[idx], arr[idx+1])))  
+
+    # def add_two(self, *args):
+    #     # pdb.set_trace()
+    #     if len(args) > 2:
+    #         self.add_mult(args)
+    #     else: 
+    #         key = args[0]
+    #         value = args[1]
+    #         index = self.bin_for(key)
+    #         try:
+    #             self.bins[index] = [key, value]
+    #         except IndexError:
+    #             self.bins.insert(index, [key, value])
+    #         return 
+
+    def add_test(self, *args):
+        # pdb.set_trace()
+        if len(args) < 2:
+            key = args[0]
+            value = args[1]
+            index = self.bin_for(key)
+            try:
+                self.bins[index] = [key, value]
+            except IndexError:
+                self.bins.insert(index, [key, value])
+            return 
+        else:
+            for idx, val in enumerate(args):
+                arr = args
+                if idx < len(arr) - 1 and (idx == 0 or idx % 2 == 0):
+                    index = self.bin_for(arr[idx])
+                    try:
+                    
+                        self.bins[index] = [arr[idx], arr[idx+1]]
+                        print self.bins
+                    except IndexError:
+                        self.bins.insert(index, [arr[idx], arr[idx+1]])
+            return self
+
+
 
     
+    def wrapper(self, func, *args):
+        func(*args)
+
+    def add(self, *args):
+        if len(args) > 2:
+            self.wrapper(self.add_mult, args)
+        else:
+            self.wrapper(self.add_two, args)
+
+
 
     def keys(self):
         keys = []
@@ -78,9 +141,9 @@ class Hash_me(object):
     bins = property(get_bins, set_bins)
 
 
-# ha = Hash_me()
-# ha.add(8,9)
+ha = Hash_me()
+print ha.add_test(8,9,4,5)
+print ha.bins
 # ha2 = Hash_me()
 # ha2.add(55,66)
 # ha.merge(ha2)
-# print ha.keys()
