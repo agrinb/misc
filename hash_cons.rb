@@ -18,12 +18,4 @@ def start hash, arr
   hash
 end
 
-arr = ['a', 'b', 'c']
-
-arr2 = ['a', 'z', 'c']
-
-hash = {'a' => {'b' => { 'g' => 1}}}
-hash2 =  start(hash, arr)
-p start(hash2, arr2)
-
 
