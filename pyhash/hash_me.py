@@ -1,11 +1,27 @@
 import pdb
 
 class Hash_me(object):
-    def __init__(self):
-        # self.current = 0 
-        # self.high = 499
+    def __init__(self, *args):
         self.bin_count = 500
         self.bins = [None] * 500
+        if len(args) < 2:
+            key = args[0]
+            value = args[1]
+            index = self.bin_for(key)
+            try:
+                self.bins[index] = [key, value]
+            except IndexError:
+                self.bins.insert(index, [key, value])
+        else:
+            for idx, val in enumerate(args):
+                arr = args
+                if idx < len(arr) - 1 and (idx == 0 or idx % 2 == 0):
+                    index = self.bin_for(arr[idx])
+                    try:
+                        self.bins[index] = [arr[idx], arr[idx+1]]
+                    except IndexError:
+                        self.bins.insert(index, [arr[idx], arr[idx+1]])
+
 
     def __iter__(self):
         return iter(self.bins)
@@ -34,36 +50,12 @@ class Hash_me(object):
         return self.bins[index][1]
     
 
-    def add(self, *args):
-        if len(args) < 2:
-            key = args[0]
-            value = args[1]
-            index = self.bin_for(key)
-            try:
-                self.bins[index] = [key, value]
-            except IndexError:
-                self.bins.insert(index, [key, value])
-            return self
-        else:
-            for idx, val in enumerate(args):
-                arr = args
-                if idx < len(arr) - 1 and (idx == 0 or idx % 2 == 0):
-                    index = self.bin_for(arr[idx])
-                    try:
-                        self.bins[index] = [arr[idx], arr[idx+1]]
-                
-                    except IndexError:
-                        self.bins.insert(index, [arr[idx], arr[idx+1]])
-            return self
-
-
     def keys(self):
         keys = []
         for item in self.bins:
             if item != None:
                 keys.append(item[0])
         return keys
-
 
 
     def values(self):
