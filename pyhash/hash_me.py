@@ -2,12 +2,12 @@ import pdb
 
 class Hash_me(object):
     def __init__(self, *args):
-        self.bin_count = 500
-        self.bins = [None] * 500
+        self.bin_count = 10
+        self.bins = [None] * 10
         if len(args) < 2:
             key = args[0]
             value = args[1]
-            index = self.bin_for(key)
+            index = self.init_idx(key)
             try:
                 self.bins[index] = [key, value]
             except IndexError:
@@ -16,7 +16,8 @@ class Hash_me(object):
             for idx, val in enumerate(args):
                 arr = args
                 if idx < len(arr) - 1 and (idx == 0 or idx % 2 == 0):
-                    index = self.bin_for(arr[idx])
+                    # pdb.set_trace()
+                    index = self.init_idx(arr[idx])
                     try:
                         self.bins[index] = [arr[idx], arr[idx+1]]
                     except IndexError:
@@ -35,6 +36,13 @@ class Hash_me(object):
 
     def set_bin_count(self, value):
         self.__bin_count = value
+       
+
+    def double_bins(self):
+        bin_len = len(self.bins)
+        for num in bin_len:
+            self.bins.append(None)
+
 
     def get_bins(self):
         return self.__bins
@@ -46,7 +54,8 @@ class Hash_me(object):
         return self.__bin_count
 
     def get(self, key):
-        index = self.bin_for(key)
+        index = self.get_idx(key)
+        # pdb.set_trace()
         return self.bins[index][1]
     
 
@@ -75,6 +84,27 @@ class Hash_me(object):
                     self.add(item[0], item[1])
                     return self
 
+    def init_idx(self, key):
+        index = self.bin_for(key)
+        bin_len = len(self.bins)
+        if self.bins.count(None) < bin_len / 2:
+            self.double_bins
+        while True:
+            if self.bins[index] == None:
+                return index
+            else: 
+                index += 1
+
+    def get_idx(self, key):
+        index = self.bin_for(key)
+        switch = True
+        while switch:
+            if self.bins[index][0] == key:
+                return index
+            else: 
+                index += 1
+
+
 
 
     def bin_for(self, key):
@@ -84,9 +114,4 @@ class Hash_me(object):
     bins = property(get_bins, set_bins)
 
 
-# ha = Hash_me()
-# print ha.add_test(8,9,4,5)
-# print ha.bins
-# ha2 = Hash_me()
-# ha2.add(55,66)
-# ha.merge(ha2)
+
