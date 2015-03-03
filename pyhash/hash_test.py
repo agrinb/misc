@@ -1,9 +1,9 @@
 
 from hash_me import Hash_me
 import unittest
-import pdb
 
-ha = Hash_me()
+
+
 
 class HashMeTest(unittest.TestCase):
 
