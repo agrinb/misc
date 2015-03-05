@@ -1,4 +1,4 @@
-### Moat code challenge
+###  Code challenge
 
 using python 2.7.5
 
