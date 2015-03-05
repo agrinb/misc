@@ -1,4 +1,4 @@
-### Moat code challenge
+### Code challenge
 
 Please find submissions for challenge #3 (nested_hash directory) and #7 (hash_class directory) in their respective folders
 
