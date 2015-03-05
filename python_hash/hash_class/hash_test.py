@@ -1,14 +1,10 @@
 
 from hash_me import Hash_me
 import unittest
-import pdb
 
 
-class HashMeTest(unittest.TestCase):
 
-    #I focussed on the functionality of the Class rather than
-    #syntax, I did not create a hash literal method.
-    
+class HashMeTest(unittest.TestCase):    
     #ha is an instance of Hash_me
     def test_init(self):
         ha = Hash_me(5,6)
@@ -31,6 +27,10 @@ class HashMeTest(unittest.TestCase):
         string2 = 'string2'
         ha = Hash_me('string1', 'string2')
         self.assertEquals(ha.get('string1'), 'string2')
+
+    def test_add(self):
+        ha = Hash_me(8,9)
+        self.assertEquals(ha.get(8), 9)
     
     def test_get(self):
         ha = Hash_me(8,9)
