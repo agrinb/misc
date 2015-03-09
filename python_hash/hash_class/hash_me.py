@@ -4,8 +4,6 @@ class Hash_me(object):
     def __init__(self, *args):
         if len(args) % 2 != 0:
             raise  RuntimeError ("Hash takes only an even amount of arguments")
-        if len(args) < 2:
-            raise  RuntimeError ("Hash takes at least two arguments")  
         self.bin_count = 10
         self.bins = [None] * 10 #Create an empty list with 10 slots. 
         for idx, val in enumerate(args):
@@ -49,7 +47,7 @@ class Hash_me(object):
 
     #calculate and store in first available empty slot and key, value in 
     def add(self, key, value):
-        index = self.init_idx(arr[idx])
+        index = self.init_idx(key)
         self.bins[index] = [key, value]
 
 
@@ -84,32 +82,46 @@ class Hash_me(object):
                     self.add(item[0], item[1])
                     return self
 
-    #wrapper around hashing algo to prevent collisions
-    def init_idx(self, key):
-        bin_len = len(self.bins)
-        if self.bins.count(None) < bin_len / 2:  # if you are running out of slots in the array double it
-            self.double_bins()
-            self.bin_count *= 2
+    def rehash(self):
+        new_bins = [None] * self.bin_count * 2
+        self.bin_count = self.bin_count * 2
+        for binn in self.bins:
+            if binn != None:
+                index = self.new_idx(binn[0], new_bins)
+                new_bins[index] = [binn[0], binn[1]]
+                print new_bins
+        self.bins = new_bins
+        self.bin_count = len(self.bins)
+
+
+    def new_idx(self, key, li):    
         index = self.bin_for(key)
         while True:
-            if self.bins[index] == None: # Get an empty slot at said index, else, see if the next slot is empty
+            if li[index] == None: # Get an empty slot at said index, else, see if the next slot is empty
                 return index
             else:  
                 index += 1 
 
+
+    #wrapper around hashing algo to prevent collisions
+    def init_idx(self, key):
+        if self.bins.count(None) < self.bin_count / 2:  # if you are running out of slots in the array double it
+            self.rehash()
+        return self.new_idx(key, self.bins)
+
     # Check if key is at said index, otherwise check next slot
     def get_idx(self, key):
         index = self.bin_for(key)
-        bin_len = len(self.bins)
+        bin_len = self.bin_count
         while True: 
             if self.bins[index] != None and self.bins[index][0] == key:
                 return index
             else: 
                 if index < bin_len - 1:
                     index += 1
-                else:
-                    bin_len = bin_len / 2
-                    index = bin_len
+                # else:
+                #     bin_len = bin_len / 2
+                #     index = bin_len
     #calculate the index to store and retrieve the pair of values
     def bin_for(self, key):
         return hash(key) % self.bin_count 
@@ -118,4 +130,3 @@ class Hash_me(object):
     bins = property(get_bins, set_bins)
 
 
-ha2 = Hash_me(5,6,7,8,1,2,3,4,11,12,13,14,15,16,17,18)
