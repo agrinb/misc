@@ -1,6 +1,7 @@
 
 from hash_me import Hash_me
 import unittest
+import pdb 
 
 
 
@@ -21,6 +22,11 @@ class HashMeTest(unittest.TestCase):
         self.assertEquals(ha2.get(11), 12)
         self.assertEquals(ha2.get(17), 18)
 
+    def test_double_bins(self):
+        ha = Hash_me(5,6)
+        hash_size = len(ha.bins)
+        ha.double_bins()
+        self.assertEquals(len(ha.bins), hash_size * 2 )
 
     def test_init_with_strings(self):
         string1 = 'string1'

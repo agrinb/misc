@@ -1,3 +1,5 @@
+import pdb
+
 class Hash_me(object):
     def __init__(self, *args):
         if len(args) % 2 != 0:
@@ -41,7 +43,7 @@ class Hash_me(object):
 
     def double_bins(self):
         bin_len = len(self.bins)
-        for num in bin_len:
+        for num in range(bin_len):
             self.bins.append(None)
 
 
@@ -86,7 +88,8 @@ class Hash_me(object):
     def init_idx(self, key):
         bin_len = len(self.bins)
         if self.bins.count(None) < bin_len / 2:  # if you are running out of slots in the array double it
-            self.double_bins
+            self.double_bins()
+            self.bin_count *= 2
         index = self.bin_for(key)
         while True:
             if self.bins[index] == None: # Get an empty slot at said index, else, see if the next slot is empty
@@ -97,12 +100,16 @@ class Hash_me(object):
     # Check if key is at said index, otherwise check next slot
     def get_idx(self, key):
         index = self.bin_for(key)
+        bin_len = len(self.bins)
         while True: 
-            if self.bins[index][0] == key:
+            if self.bins[index] != None and self.bins[index][0] == key:
                 return index
             else: 
-                index += 1
-
+                if index < bin_len - 1:
+                    index += 1
+                else:
+                    bin_len = bin_len / 2
+                    index = bin_len
     #calculate the index to store and retrieve the pair of values
     def bin_for(self, key):
         return hash(key) % self.bin_count 
@@ -111,4 +118,4 @@ class Hash_me(object):
     bins = property(get_bins, set_bins)
 
 
-
+ha2 = Hash_me(5,6,7,8,1,2,3,4,11,12,13,14,15,16,17,18)
