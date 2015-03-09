@@ -91,7 +91,6 @@ class Hash_me(object):
                 new_bins[index] = [binn[0], binn[1]]
                 print new_bins
         self.bins = new_bins
-        self.bin_count = len(self.bins)
 
 
     def new_idx(self, key, li):    
@@ -119,9 +118,7 @@ class Hash_me(object):
             else: 
                 if index < bin_len - 1:
                     index += 1
-                # else:
-                #     bin_len = bin_len / 2
-                #     index = bin_len
+
     #calculate the index to store and retrieve the pair of values
     def bin_for(self, key):
         return hash(key) % self.bin_count 
