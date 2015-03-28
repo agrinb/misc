@@ -21,7 +21,7 @@ class Ticker(object):
 
     def init_input(self):
         print "Please input a ticker:"
-        inp = raw_input()
+        inp = 'PRGFX' #raw_input() 
         self.set_ticker_attr(inp)
 
     def set_ticker_attr(self, inp):
@@ -35,23 +35,31 @@ class Ticker(object):
         self.init_input()
         page = urllib2.urlopen('http://www.sec.gov/cgi-bin/browse-edgar?CIK={}&Find=Search&owner=exclude&action=getcompany'.format(self.ticker)).read()
         soup = BeautifulSoup(page)
-        soup.prettify()
-        pdb.set_trace()
-        tree = html.fromstring(page.text)
+        return soup
 
-    def match(self):
-      link = "http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001166559&owner=exclude&count=40"
-      pdb.set_trace()
-      num = re.findall(r'(?<=action=getcompany&CIK=).*?(?=&owner)', link)
-      #re.findall('^def(.*?)^end',doc,re.DOTALL|re.MULTILINE)
+    def get_cik(self, link):
+      num = re.findall(r'(?<=action=getcompany&CIK=).*?(?=&)', link)
       return num
 
-    def find_in_string(self):
-        link = "http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001166559&owner=exclude&count=40"
+    def find_in_string(self, link):
         word = '?action=getcompany&CIK='
         match = re.search(r'action=getcompany&CIK=', link)
-        if match.group(0) is not None:
-            return True
+        try: 
+           if match.group(0) is not None:
+              return True
+        except: AttributeError
+        else: 
+            return False
+
+    def check_a_nodes(self):
+        dom = self.get_dom()
+        a_nodes = dom.find_all('a')
+        for a in a_nodes:
+            href = a.get('href')
+            if self.find_in_string(href):
+                return self.get_cik(href)
+
+
 
     #get a elements
     #find a link that includes 'action=getcompany&CIK'

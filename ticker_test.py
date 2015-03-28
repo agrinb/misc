@@ -28,8 +28,12 @@ class TickerTest(unittest.TestCase):
     # def test_matching(self):
     #     self.assertEquals(self.tk.match(), 000116655 )
 
+    # def test_find_in_string(self):
+    #     self.assertEquals(self.tk.find_in_string(), True )
+
     def test_find_in_string(self):
-        self.assertEquals(self.tk.find_in_string(), True )
+        self.tk.ticker = 'PRGFX'
+        self.assertEquals(self.tk.check_a_nodes()[0], '0000080257' )
 
 
 
