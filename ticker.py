@@ -4,6 +4,10 @@ import requests
 import pprint
 import urllib2
 import re
+import xmltodict
+import csv
+import sys
+
 
 
 
@@ -11,6 +15,11 @@ import re
 class Ticker(object):
     def __init__(self):
         self.ticker = ''
+        self.cik_url_prop = "http://www.sec.gov/cgi-bin/browse-edgar?CIK={}&Find=Search&owner=exclude&action=getcompany"
+        self.f13_url_prop = "http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={}&type=13F-HR&dateb=&count=40&scd=filings"
+        self.sec_url = 'http://www.sec.gov/'
+        self.company = 'Temp'
+
 
 
     def get_ticker(self):
@@ -31,9 +40,8 @@ class Ticker(object):
         self.ticker = inp
         return self.ticker
 
-    def get_dom(self):
-        self.init_input()
-        page = urllib2.urlopen('http://www.sec.gov/cgi-bin/browse-edgar?CIK={}&Find=Search&owner=exclude&action=getcompany'.format(self.ticker)).read()
+    def get_dom(self, link):
+        page = urllib2.urlopen(link.format(self.ticker)).read()
         soup = BeautifulSoup(page)
         return soup
 
@@ -51,13 +59,101 @@ class Ticker(object):
         else: 
             return False
 
-    def check_a_nodes(self):
-        dom = self.get_dom()
+    def a_nodes_to_cik(self, link):
+        dom = self.get_dom(link)
         a_nodes = dom.find_all('a')
         for a in a_nodes:
             href = a.get('href')
             if self.find_in_string(href):
                 return self.get_cik(href)
+
+
+    def get_report_dom(self, link):
+        #####
+        temp = "http://www.sec.gov/cgi-bin/browse-edgar?CIK=0001166559&Find=Search&owner=exclude&action=getcompany"
+        #####
+        cik = self.a_nodes_to_cik(self.cik_url_prop)
+      
+        f13_link = self.f13_url_prop.format(cik[0])
+        reports_dom = self.get_dom(temp)
+        self.get_report_path(reports_dom)
+
+    def get_report_path(self, dom):
+        cells = dom.select(".tableFile2")[0].find_all('td')
+        the_cell = None
+        for cell in cells:
+            if cell.string == '13F-HR':
+                the_cell = cell
+        href = the_cell.find_next().find('a')['href']
+        report_url = self.sec_url + href
+        self.get_docs_path(report_url)
+
+
+    def get_docs_path(self, link):
+        dom = self.get_dom(link)
+        cells = dom.select(".tableFile")[0].find_all('td')
+        the_cell = None
+        for cell in cells:
+            if 'Complete submission' in cell.string: 
+                the_cell = cell
+        href = the_cell.find_next().find('a')['href']
+        file_url = self.sec_url + href
+        self.get_file_text(file_url)
+
+    def get_file_text(self, link):
+        link = 'http://www.sec.gov/Archives/edgar/data/1166559/000110465914039387/0001104659-14-039387.txt'
+        page = urllib2.urlopen(link).read().replace('\n', '')
+        #pdb.set_trace()
+        data = re.findall ('<TEXT>(.*?)</TEXT>', page, re.DOTALL)
+        data_xml = BeautifulSoup(data[1], "lxml")
+        self.to_csv(data_xml)
+
+    def to_csv(self, data):
+        self.write_headers(data)
+
+
+    def write_headers(self, data):
+        with open('{}.csv'.format(self.company), 'w') as csvfile:
+            co = data.find('infotable')
+            fieldnames = []
+            for child in co.children:
+                if hasattr(child, 'tag'):
+                     fieldnames.append(child.name)             
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            cos = data.find_all('infotable')
+            for co in cos:
+                row = []
+                for child in co.children:
+                    
+                    if hasattr(child, 'tag'):
+                         row.append(child.string)
+                pdb.set_trace()
+                writer.writerow(row)         
+            csvfile.close()
+    #     csvfile.close()
+    #     self.write_data(data, csvfile)
+    
+    
+    # def write_data(self, data, csvfile):
+    #     with open('{}.csv'.format(self.company), 'a') as csvfile:
+            cos = data.find_all('infotable')
+            for co in cos:
+                for child in co.children:
+                    row = []
+                    if hasattr(child, 'tag'):
+                         row.append(child.string)
+                    writer.writerow(row)         
+            file.close()
+    
+    def read_text_file(self, link):  
+        page = urllib2.urlopen(link)
+        report = list(csv.reader(page , delimiter='\t'))
+        for line in report:
+            print line
+        # with open(page) as tsv:
+          
+
 
 
 

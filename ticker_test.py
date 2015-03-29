@@ -8,6 +8,9 @@ class TickerTest(unittest.TestCase):
 
     def setUp(self):
         self.tk = Ticker()
+        self.tk.cik_url_prop = 'http://www.sec.gov/cgi-bin/browse-edgar?CIK={}&Find=Search&owner=exclude&action=getcompany'
+        self.tk.f13_url_prop = 'http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={}&type=13F-HR&dateb=&count=40&scd=filings'
+
             
     def test_init(self):  
         tk = Ticker()
@@ -31,9 +34,16 @@ class TickerTest(unittest.TestCase):
     # def test_find_in_string(self):
     #     self.assertEquals(self.tk.find_in_string(), True )
 
-    def test_find_in_string(self):
+    # def cik_url_prop_test(self):
+    #     self.tk.ticker = 'PRGFX'
+    #     self.assertEquals(self.tk.a_nodes_to_cik(self.tk.cik_url_prop)[0], '0000080257' )
+
+    def test_report_dom(self):
         self.tk.ticker = 'PRGFX'
-        self.assertEquals(self.tk.check_a_nodes()[0], '0000080257' )
+        self.tk.set_ticker_attr(self.tk.ticker)
+        #self.assertEquals(self.tk.get_report_dom(self.tk.f13_url_prop))
+        link = "http://www.sec.gov/cgi-bin/browse-edgar?CIK=0001166559&Find=Search&owner=exclude&action=getcompany"
+        self.assertEquals(self.tk.get_report_dom(link))
 
 
 
