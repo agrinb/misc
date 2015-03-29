@@ -123,28 +123,26 @@ class Ticker(object):
             writer.writeheader()
             cos = data.find_all('infotable')
             for co in cos:
-                row = []
+                row = {}
                 for child in co.children:
-                    
                     if hasattr(child, 'tag'):
-                         row.append(child.string)
-                pdb.set_trace()
+                         string = unicode(child.string)
+                         row['{}'.format(child.name)] = string 
                 writer.writerow(row)         
             csvfile.close()
-    #     csvfile.close()
-    #     self.write_data(data, csvfile)
+
     
     
-    # def write_data(self, data, csvfile):
-    #     with open('{}.csv'.format(self.company), 'a') as csvfile:
-            cos = data.find_all('infotable')
-            for co in cos:
-                for child in co.children:
-                    row = []
-                    if hasattr(child, 'tag'):
-                         row.append(child.string)
-                    writer.writerow(row)         
-            file.close()
+    # # def write_data(self, data, csvfile):
+    # #     with open('{}.csv'.format(self.company), 'a') as csvfile:
+    #         cos = data.find_all('infotable')
+    #         for co in cos:
+    #             for child in co.children:
+    #                 row = []
+    #                 if hasattr(child, 'tag'):
+    #                      row.append(child.string)
+    #                 writer.writerow(row)         
+    #         file.close()
     
     def read_text_file(self, link):  
         page = urllib2.urlopen(link)
