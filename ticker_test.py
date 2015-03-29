@@ -12,14 +12,14 @@ class TickerTest(unittest.TestCase):
         self.tk.f13_url_prop = 'http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={}&type=13F-HR&dateb=&count=40&scd=filings'
 
             
-    def test_init(self):  
-        tk = Ticker()
-        self.assertIsInstance(tk, Ticker)
+    # def test_init(self):  
+    #     tk = Ticker()
+    #     self.assertIsInstance(tk, Ticker)
 
-    # def test_setter(self):
-    #     inp = 'PRGFX'
-    #     self.tk.ticker = inp
-    #     self.assertEquals(self.tk.ticker, 'PRGFX')
+    def test_setter(self):
+        inp = 'PRGFX'
+        self.tk.ticker = inp
+        self.assertEquals(self.tk.init_input(), 'PRGFX')
 
     # def test_check_input(self):
     #     inp = 'PRGFX'
@@ -38,12 +38,14 @@ class TickerTest(unittest.TestCase):
     #     self.tk.ticker = 'PRGFX'
     #     self.assertEquals(self.tk.a_nodes_to_cik(self.tk.cik_url_prop)[0], '0000080257' )
 
-    def test_report_dom(self):
-        self.tk.ticker = 'PRGFX'
-        self.tk.set_ticker_attr(self.tk.ticker)
-        #self.assertEquals(self.tk.get_report_dom(self.tk.f13_url_prop))
-        link = "http://www.sec.gov/cgi-bin/browse-edgar?CIK=0001166559&Find=Search&owner=exclude&action=getcompany"
-        self.assertEquals(self.tk.get_report_dom(link))
+    # def test_report_dom(self):
+    #     self.tk.cik = '0001166559'
+    #     # self.tk.set_ticker_attr(self.tk.ticker)
+    #     #self.assertEquals(self.tk.get_report_dom(self.tk.f13_url_prop))
+    #     link = "http://www.sec.gov/cgi-bin/browse-edgar?CIK=0001166559&Find=Search&owner=exclude&action=getcompany"
+    #     self.assertEquals(self.tk.get_report_dom(link))
+
+
 
 
 

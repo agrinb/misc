@@ -19,26 +19,36 @@ class Ticker(object):
         self.f13_url_prop = "http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={}&type=13F-HR&dateb=&count=40&scd=filings"
         self.sec_url = 'http://www.sec.gov/'
         self.company = 'Temp'
+        self.cik = None
 
 
 
-    def get_ticker(self):
-        return self.__ticker
+    # def get_ticker(self):
+    #     return self.__ticker
 
-    def set_ticker(self, value):
-        self.__ticker = value
+    # def set_ticker(self, value):
+    #     self.__ticker = value
 
     def init_input(self):
-        print "Please input a ticker:"
-        inp = 'PRGFX' #raw_input() 
-        self.set_ticker_attr(inp)
-
+        print "Please input a ticker or CIK#:"
+        inp = raw_input()
+        try: 
+            if isinstance(((int(inp[0]))), int) and len(inp) == 10:
+                self.cik = inp
+                return self.get_report_dom(self.cik_url_prop)
+        except ValueError:
+            print "{} is a Ticker".format(inp) 
+        else:
+            print '2'
+            self.set_ticker_attr(inp)
+            self.a_nodes_to_cik(self.cik_url_prop)
+    
     def set_ticker_attr(self, inp):
         while len(inp) >= 6 or len(inp) <= 3 :
             print "Sorry it does not appear you entered a valid ticker, please try again:"
             inp = raw_input()
         self.ticker = inp
-        return self.ticker
+
 
     def get_dom(self, link):
         page = urllib2.urlopen(link.format(self.ticker)).read()
@@ -47,7 +57,8 @@ class Ticker(object):
 
     def get_cik(self, link):
       num = re.findall(r'(?<=action=getcompany&CIK=).*?(?=&)', link)
-      return num
+      self.cik = num[0]
+  
 
     def find_in_string(self, link):
         word = '?action=getcompany&CIK='
@@ -65,23 +76,25 @@ class Ticker(object):
         for a in a_nodes:
             href = a.get('href')
             if self.find_in_string(href):
-                return self.get_cik(href)
+                self.get_cik(href)
+                self.get_report_dom(self.cik_url_prop)
 
 
     def get_report_dom(self, link):
-        #####
-        temp = "http://www.sec.gov/cgi-bin/browse-edgar?CIK=0001166559&Find=Search&owner=exclude&action=getcompany"
-        #####
-        cik = self.a_nodes_to_cik(self.cik_url_prop)
+        # #####
+        # temp = "http://www.sec.gov/cgi-bin/browse-edgar?CIK=0001166559&Find=Search&owner=exclude&action=getcompany"
+        # #####
+        # cik = self.a_nodes_to_cik(self.cik_url_prop)
       
-        f13_link = self.f13_url_prop.format(cik[0])
-        reports_dom = self.get_dom(temp)
+        f13_link = self.f13_url_prop.format(self.cik)
+        reports_dom = self.get_dom(f13_link)
         self.get_report_path(reports_dom)
 
     def get_report_path(self, dom):
+        # pdb.set_trace()
         cells = dom.select(".tableFile2")[0].find_all('td')
         the_cell = None
-        for cell in cells:
+        for cell in reversed(cells):
             if cell.string == '13F-HR':
                 the_cell = cell
         href = the_cell.find_next().find('a')['href']
@@ -94,25 +107,21 @@ class Ticker(object):
         cells = dom.select(".tableFile")[0].find_all('td')
         the_cell = None
         for cell in cells:
-            if 'Complete submission' in cell.string: 
-                the_cell = cell
+            try:
+                if 'Complete submission' in cell.string: #find the row with file
+                    the_cell = cell
+            except: TypeError
         href = the_cell.find_next().find('a')['href']
         file_url = self.sec_url + href
         self.get_file_text(file_url)
 
     def get_file_text(self, link):
-        link = 'http://www.sec.gov/Archives/edgar/data/1166559/000110465914039387/0001104659-14-039387.txt'
         page = urllib2.urlopen(link).read().replace('\n', '')
-        #pdb.set_trace()
         data = re.findall ('<TEXT>(.*?)</TEXT>', page, re.DOTALL)
         data_xml = BeautifulSoup(data[1], "lxml")
         self.to_csv(data_xml)
 
     def to_csv(self, data):
-        self.write_headers(data)
-
-
-    def write_headers(self, data):
         with open('{}.csv'.format(self.company), 'w') as csvfile:
             co = data.find('infotable')
             fieldnames = []
@@ -128,21 +137,11 @@ class Ticker(object):
                     if hasattr(child, 'tag'):
                          string = unicode(child.string)
                          row['{}'.format(child.name)] = string 
-                writer.writerow(row)         
+                writer.writerow(row) 
+                print '1'       
             csvfile.close()
 
-    
-    
-    # # def write_data(self, data, csvfile):
-    # #     with open('{}.csv'.format(self.company), 'a') as csvfile:
-    #         cos = data.find_all('infotable')
-    #         for co in cos:
-    #             for child in co.children:
-    #                 row = []
-    #                 if hasattr(child, 'tag'):
-    #                      row.append(child.string)
-    #                 writer.writerow(row)         
-    #         file.close()
+
     
     def read_text_file(self, link):  
         page = urllib2.urlopen(link)
@@ -150,6 +149,7 @@ class Ticker(object):
         for line in report:
             print line
         # with open(page) as tsv:
+
           
 
 
@@ -172,7 +172,6 @@ class Ticker(object):
 
 
 
-    ticker = property(get_ticker, set_ticker)
 
 
 
