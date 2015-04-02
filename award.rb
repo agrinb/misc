@@ -31,7 +31,7 @@ class Award
     when 'Blue First'
       expired? ? 2 : 1
     when 'Blue Compare'
-       value_blue_compare
+      value_blue_compare
     when 'Blue Star'
       expired? ? -4 : -2
     end
