@@ -1,5 +1,5 @@
 class Award 
-  
+  #Created class to handle awards
   attr_accessor :name, :expires_in, :quality, :update_quality
   
   def initialize(name, expires_in, quality)
@@ -8,6 +8,7 @@ class Award
     @quality = quality
   end
 
+  #increments award and keeps upper and lower bounds on @quality value
   def increment_award
     if @quality == 80 
       @quality 
@@ -20,6 +21,7 @@ class Award
     end
   end
 
+  # returns value to increment each award
   def award_inc_value
     case @name
     when "Blue Distinction Plus"
@@ -29,13 +31,14 @@ class Award
     when 'Blue First'
       expired? ? 2 : 1
     when 'Blue Compare'
-       inc_value_blue_compare
+       value_blue_compare
     when 'Blue Star'
       expired? ? -4 : -2
     end
   end
-
-  def inc_value_blue_compare
+  
+  #handles blue compare value attribution
+  def value_blue_compare
     if expired?
      -1 * quality
     elsif @expires_in <= 5
@@ -55,6 +58,7 @@ class Award
     @expires_in -= 1 unless @name == "Blue Distinction Plus"
   end
 
+  #starts the update process for award
   def update_award! 
     increment_award
     update_expiration
