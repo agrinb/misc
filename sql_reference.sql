@@ -28,3 +28,27 @@ SELECT genres.name, studios.name, actors.name, cast_members.character FROM movie
   JOIN cast_members ON movies.id = cast_members.movie_id
   JOIN actors ON actors.id = cast_members.actor_id
   WHERE movies.id = 'POTATO';
+
+-- find movie details
+SELECT movies.title AS title, genres.name AS genre, studios.name AS studio FROM movies
+                JOIN genres ON movies.genre_id = genres.id
+                JOIN studios ON movies.studio_id = studios.id
+                WHERE movies.id = $1;
+
+
+-- find character details
+SELECT actors.id AS id, actors.name AS name, cast_members.character AS character
+  FROM actors
+  JOIN cast_members ON actors.id = cast_members.actor_id
+  JOIN movies ON cast_members.movie_id = movies.id
+  WHERE movies.id = $1;
+
+SELECT genres.name AS genre FROM genres
+JOIN movies ON movies.genre_id = genres.id WHERE movies.title LIKE '%Jumpout%';
+
+"INSERT INTO movies (title, year, rating, genre_id, created_at) " +
+    "VALUES ($1, $2, $3, $4, NOW())"
+
+INSERT INTO movies (studio_id) VALUES (2) WHERE movies.title LIKE '%Jump%';
+
+UPDATE movies SET studio_id = 2 WHERE movies.title LIKE '%Jump%';

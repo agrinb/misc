@@ -9,11 +9,19 @@
   <label for="rating">Rating:</label>
   <input type="text" id="rating" name="rating" /><br>
 
-  <label for="genre_id">Genre ID</label>
-  <input type="text" id="genre_id" name="genre_id" /><br>
+  <label for="genre_name">Genre Name</label>
+    <select>
+      <% @genres_list.each do |genre| %>
+      <option value="<%= "#{genre["name"]}" %>"> <%= "#{genre["name"]}" %></option>
+      <% end %>
+    </select><br>
 
-  <label for="studio_id">Studio ID</label>
-  <input type="text" id="studio_id" name="studio_id" /><br>
+  <label for="studio_name">Studio Name</label>
+   <select>
+      <% @studios_list.each do |studio| %>
+      <option value="<%= "#{studio["name"]}" %>"> <%= "#{studio["name"]}" %></option>
+      <% end %>
+    </select><br>
 
   <input type="submit" value="Submit" />
 
