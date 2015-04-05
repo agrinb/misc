@@ -14,18 +14,10 @@ Dir.glob('data/*.txt') do |file|
 end
 data = data.squeeze("\n")
 
-
 arr = []
 CSV.parse(data) do |row|
-  # date = ''
-  # row.each do |x| 
-  #   date = /([0-9]+)\/([0-9]+)\/([0-9]+)/.match(x)
-  # end
-
  row = row[0].split(" ")
   unless /([0-9]+)\/([0-9]+)\/([0-9]+)/.match(row[-1])
-  #row.find_index(date) == row.length - 1
-  #binding.pry
     row[-1], row[-2] = row[-2], row[-1]
   end
   if row.length < 6
@@ -39,17 +31,17 @@ binding.pry
 
 data = arr
 
-  SurnameIndex = 0
-  GenderIndex  = 3
-  DateIndex    = 5
+SurnameIndex = 0
+GenderIndex  = 3
+DateIndex    = 5
 
-  puts "By gender then surname: %s" % data.sort_by.sort_by { |object| [ object[GenderIndex], object[SurnameIndex] ] }.inspect
+puts "By gender then surname: %s" % data.sort_by.sort_by { |object| [ object[GenderIndex], object[SurnameIndex] ] }.inspect
 
-  new_data = data.sort_by.sort_by do |object| 
-    Date.strptime(object[DateIndex], '%m/%d/%Y') 
-  end
-  puts new_data.inspect
-  puts "By surname descending: %s" % data.sort_by.sort { |a, b| b[SurnameIndex] <=> a[SurnameIndex] }.inspect
+new_data = data.sort_by.sort_by do |object| 
+  Date.strptime(object[DateIndex], '%m/%d/%Y') 
+end
+puts new_data.inspect
+puts "By surname descending: %s" % data.sort_by.sort { |a, b| b[SurnameIndex] <=> a[SurnameIndex] }.inspect
 
 
 
