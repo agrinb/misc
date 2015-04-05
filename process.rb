@@ -16,18 +16,17 @@ data = data.squeeze("\n")
 
 arr = []
 CSV.parse(data) do |row|
- row = row[0].split(" ")
-  unless /([0-9]+)\/([0-9]+)\/([0-9]+)/.match(row[-1])
+  row = row[0].split(" ")
+  if /([0-9]+)\/([0-9]+)\/([0-9]+)/.match(row[-1])
     row[-1], row[-2] = row[-2], row[-1]
   end
+  binding.pry
+  row[-2] = Date.strptime(row[-2], '%m/%d/%Y').strftime('%m/%d/%Y')
   if row.length < 6
     row.insert(2, nil)
   end
-  p row
   arr << row
 end 
-
-binding.pry
 
 data = arr
 
