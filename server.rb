@@ -12,18 +12,16 @@ def all_rows
       in_file.each do |line|
         #convert data to be consistent with other files
         line =  line.gsub('Male', 'M').gsub('Female', 'F')
-        data << line.gsub('-', '/').gsub(',', ' ').gsub('|', ' ').squeeze(' ') << "\n" #add line breaks between files
+        data << line.gsub('-', '/').gsub(' ', ',').gsub('|', ',').squeeze(' ') << "\n" #add line breaks between files
       end
     end 
   end
-  data = data.squeeze("\n") #remove consecutive line breaks (\n\n) 
+  data = data.squeeze("\n").squeeze(",") #remove consecutive line breaks (\n\n) 
 end
 
 def prep_data(data)
   arr = []
   CSV.parse(data) do |row|
-    #convert row into array
-    row = row[0].split(" ")
     #adjust the colum the DOB is in
     if /([0-9]+)\/([0-9]+)\/([0-9]+)/.match(row[-1])
       row[-1], row[-2] = row[-2], row[-1]
@@ -38,6 +36,8 @@ def prep_data(data)
   end
   arr
 end
+
+
 
 data = prep_data(all_rows)
 

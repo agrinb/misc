@@ -1,3 +1,8 @@
-li {
+nav > ul > li {
   font-size: 24px;
+}
+
+nav > ul {
+  padding: 25px;
+  margin-left: 0;
 }
