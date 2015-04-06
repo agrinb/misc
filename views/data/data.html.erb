@@ -1,5 +1,8 @@
-<ul>
-    <% @data.each do |row| %>
-    <li><%= row.join(", ") %></li>
-    <% end %>
-</ul>
+<div>
+  <ul class="list-group">
+      <% @data.each do |row| %>
+      <li class="list-group-item"><%= row.join(", ") %></li>
+      <% end %>
+  </ul>
+</div>
+

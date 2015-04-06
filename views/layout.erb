@@ -2,13 +2,29 @@
 <html lang="en">
   <head>
     <title><%= @page_title %></title>
-    <link rel="stylesheet" href="public/home.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+   
+
+
+    
   </head>
 
   <body>
-  <h1><%= @page_title %></h1>
+    
+    <div class="container">
+      <nav>
+        <ul class="nav nav-pills">
+          <li role="presentation"><a href="/gender_and_lastname">Gender and Last name</a></li>
+          <li role="presentation"><a href="/birth_date">Birthday</a></li>
+          <li role="presentation"><a href="/last_name">Last name</a></li>
+        </ul>
+    </nav>
+      <h1><%= @page_title %></h1>
 
-    <%= yield %>
+      <%= yield %>
 
+    </div>
   </body>
+  
 </html>

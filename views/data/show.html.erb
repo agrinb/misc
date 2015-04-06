@@ -1,8 +1,0 @@
-<ul>
-  <% @actor_movies.each do |movie| %>
-    <li>
-      <a href="/movies/<%= "#{movie["movie_id"]}"%>"> <%= "#{movie["title"]}:"%> </a>
-      <%= "#{movie["character"]}" %>
-    </li>
-  <% end %>
-</ul>
