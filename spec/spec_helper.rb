@@ -1,22 +1,24 @@
 require 'sinatra'
-require 'rspec'
-require 'capybara/rspec'
+require "capybara/rspec"
 require 'capybara/dsl'
+require 'rspec'
 
-# @test_url = "test"
 
-# RSpec.configure do |config|
-#   config.include Capybara::DSL
-# end
+Capybara.app = Sinatra::Application
+
+RSpec.configure do |c|
+  c.before feature: true do
+    self.app = Sinatra::Application
+  end
+
+  c.include Capybara::DSL, feature: true
+  c.include Capybara::RSpecMatchers, feature: true
+end
 
 Capybara.configure do |config|
   config.run_server = false
-  config.current_driver = :selenium
+  config.current_driver = :rack_test
   config.app = Sinatra::Application
   config.app_host = "http://localhost:4567"
-
-  # config.include Capybara::DSL, feature: true
-  # config.include Capybara::RSpecMatchers, feature: true
 end
-
 
