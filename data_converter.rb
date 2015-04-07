@@ -20,26 +20,23 @@ class DataConverter
     arr = []
     CSV.parse(data) do |row|
       middle_name_adjust(row)
-      #adjust the colum the DOB is in
       date_position(row)
-      #convert date to mm-dd-yyyy format
       format_date(row)
-      #adjust for missing middle name
       arr << row
     end
     arr
-  end
-
+  end  
+  #convert date to mm-dd-yyyy format
   def format_date(row)
     row[-2] = Date.strptime(row[-2], '%m/%d/%Y').strftime('%m/%d/%Y')
   end
-
+  #adjust the colum the DOB is in
   def date_position(row)
    if /([0-9]+)\/([0-9]+)\/([0-9]+)/.match(row[-1])
       row[-1], row[-2] = row[-2], row[-1]
     end
   end
-
+  #adjust for missing middle name
   def middle_name_adjust(row)
     if row.length < 6
       row.insert(2, "NA")
